@@ -11,12 +11,33 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import CalendarScreen from '../screens/CalendarScreen';
-import SettingsScreen from '../screens/SettingsScreen'; // Ensure correct import
+import SettingsScreen from '../screens/SettingsScreen';
+import RegisterWorkScreen from '../screens/RegisterWorkScreen';
+import { AuthProvider, useAuth } from '../context/AuthContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
+
+function AppNavigator() {
+  const { isLoggedIn } = useAuth();
+
+  return (
+    <Stack.Navigator initialRouteName="Login">
+      {isLoggedIn ? (
+        <>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Calendar" component={CalendarScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="RegisterWork" component={RegisterWorkScreen} />
+        </>
+      ) : (
+        <Stack.Screen name="Login" component={LoginScreen} />
+      )}
+    </Stack.Navigator>
+  );
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -35,14 +56,11 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Calendar" component={CalendarScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AppNavigator />
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

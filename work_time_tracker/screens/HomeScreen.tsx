@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
@@ -19,11 +19,18 @@ export default function HomeScreen() {
       });
   };
 
+  const handleRegisterWork = () => {
+    navigation.navigate('RegisterWork');
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
-      <Text>Welcome!</Text>
-      <Button title="Logout" onPress={handleLogout} />
+      <TouchableOpacity style={styles.registerWorkButton} onPress={handleRegisterWork}>
+        <Text style={styles.registerWorkButtonText}>+</Text>
+      </TouchableOpacity>
+      <View style={styles.logoutButtonContainer}>
+        <Button title="Logout" onPress={handleLogout} />
+      </View>
       <MainNavbar />
     </View>
   );
@@ -32,5 +39,25 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  registerWorkButton: {
+    backgroundColor: 'orange',
+    marginHorizontal: 20,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginVertical: 10,
+  },
+  registerWorkButtonText: {
+    fontSize: 24,
+    color: 'white',
+  },
+  logoutButtonContainer: {
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginVertical: 10,
   },
 });
